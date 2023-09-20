@@ -1,1 +1,76 @@
-hello it's me
+1) Write a blog on Difference between HTTP1.1 vs HTTP2
+
+HTTP/1.1 -- works on textual format
+         -- there is a head of line blocking that blocks all the request behind it until it doesn't get its all resources.
+         -- it uses requests resource inlining for use getting multiple pages.
+         -- it compresses data by itself
+HTTP/2 -- it works on the binary protocol
+       -- it allows multiplexing so one TCP connection is required for 
+          multiple requests.
+      -- it uses PUSH frame by server that collects all multiple pages.
+      -- it uses HPACK(which is used to split data from header) for data compression.
+
+2) Write a blog about objects and its internal representation in Javascript
+
+- objects are important data types in javascript
+- it can hold many values in the form of key:value pair.
+- these keys can be variables or functions and are called as properties and 
+  methods.
+- every object has some property asssociated with some value.
+- after the creation of the object , the value inside the object can be 
+  accessed using keys.
+- syntax for adding a property to an object:
+  ObjectName.ObjectProperty=propertyValue;
+- object method is an object property containing a function definition.
+- javascript object can be created with - object literal,
+                                        - constructor,
+                                        - keyword new,
+                                        - Object.create method
+
+
+= codekata practice-- done
+3) Read about IP address, port, HTTP methods, MAC address	
+
+IP address== intrenet protocol address is a unique numerical identifier for every device or network that connects to the internet.
+- typically assigned by an internet service provider(ISP) , an IP address is an online device address used for communicating across the internet.
+- Each internet protocol address can send information to other IP addresses through discrete chunks known as packets.
+- Each network packet contains the data being transferred along with a header containing the metadata of the packet.
+
+
+port== is a physical docking point using which an external device can be connected to the computer.
+- It can also be programmatic docking point through which information flows from a program to the computer or over the Internet.
+- external devices are connected to a computer using cables and ports.
+- Ports are slots on the motherboard into which a cable of external device is plugged in.
+- Ex of external devices attached via ports are the mouse, keyboard, monitor, microphone, speakers, etc
+
+
+HTTP methods== -GET
+               -POST
+               -PUT
+               -HEAD
+               -DELETE
+               -PATCH
+               -OPTIONS
+               -CONNECT
+               -TRACE
+- GET: 
+The GET method is used to retrieve information from the given server using a given URI. Requests using GET should only retrieve data and should have no other effect on the data.
+- HEAD :
+transfers the status line and header section only.
+- POST :
+A POST request is used to send data to the server, for example, customer information, file upload, etc. using HTML forms.
+- PUT :
+Replaces all current representations of the target resource with the uploaded content.
+- DELETE :
+Removes all current representations of the target resource given by a URI.
+- CONNECT :
+Establishes a tunnel to the server identified by a given URI.
+- OPTIONS :
+Describes the communication options for the target resource.
+- TRACE :
+Performs a message loop-back test along the path to the target resource.
+
+
+MAC address== A MAC address, which stands for Media Access Control Address, is a physical address that works at the Data Link Layer. 
+- MAC Addresses are unique 48-bit hardware number of a computer, that is embedded into a network card (known as a Network Interface Card during manufacturing.
+- The MAC Address is also known as the Physical Address of a network device.
