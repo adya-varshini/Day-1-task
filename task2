@@ -1,0 +1,15 @@
+Task
+
+1.Write a blog on the difference between the document and window objects.
+  WINDOW: 
+     - is the main object of the potentially visible document object model.
+     - It represents the browser window in which you are seeing the content.
+     - The properties related to it are stored in the window object.
+     - Window is the global element for all objects, functions etc.
+     - It is an object of the browser.
+ DOCUMENT:
+     - the document object represents the whole HTML document as a tree of objects(HTML,HEAD,BODY,and other HTML tags).
+     -it represents the document loaded inside the window or browser.
+     -the properties related to it are stored in the document object.
+     -it is the root element of the document object model.
+     - it is an object of a window.
