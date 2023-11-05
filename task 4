@@ -1,0 +1,68 @@
+For the given json iterate over all the loops:
+
+//using for in loop
+let j = {
+  name: "ADYA",
+  age: 19,
+  city: "chennai"
+};
+
+for (let i in j) {
+  if (j.hasOwnProperty(i)) {
+    console.log(i + ": " + j[i]);
+  }
+}
+//using for of loop
+const j = {
+  name: "ADYA",
+  age: 19,
+  city: "chennai"
+};
+
+
+const p = Object.keys(j);
+
+
+for (const i of p) {
+  const pr = j[i];
+  console.log(i + ": " + pr);
+}
+
+//using for each loop
+let j = {
+  name: "ADYA",
+  age: 19,
+  city: "chennai"
+};
+
+Object.entries(j).forEach(([key, value]) => {
+  console.log(key + ": " + value);
+});
+
+
+OUTPUT:
+name: ADYA
+age: 19
+city: chennai
+
+create your own resume in Json format
+{
+  "NAME": "ADYA VARSHINI B",
+  "TITLE": "STUDENT",
+  "contact": {
+    "email": "j234@gmail.com",
+    "phone": "907863739"
+  },
+  "education": [
+    {
+      "CURRENT": "-- BTECH CSE",
+      "COLLEGE": "VIT AP"
+    }
+  ],
+  "languages": ["English", "telugu", "tamil"]
+}
+
+
+window: It is a global/root object in JavaScript and it is the root object of the Document object model(DOM)
+document: is an object inside the window object and we use a document object for manipulation inside the document.
+screen : it contains properties about the user's display.
