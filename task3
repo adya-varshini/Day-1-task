@@ -17,6 +17,18 @@ output:
 9
 
 //Convert all the strings to title caps in a string array
+var str = ["for diwali", "no holidays"];
+(function() {
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].split(' ').map(function(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  }
+})();
+console.log(str);
+output:
+[ 'For Diwali', 'No Holidays' ]
+
 
 //Sum of all numbers in an array
 var numbers = [1, 2, 3, 4, 5];
@@ -128,8 +140,62 @@ output:
 
 Do the below programs in arrow functions.
 
-Print odd numbers in an array
-Convert all the strings to title caps in a string array
-Sum of all numbers in an array
-Return all the prime numbers in an array
-Return all the palindromes in an array
+//Print odd numbers in an array
+const n = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+n.forEach((num) => {
+  if (num % 2 !== 0) {
+    console.log(num);
+  }
+});
+output:
+1
+3
+5
+7
+9
+
+//Convert all the strings to title caps in a string array
+let stra = ["hola", "its me"];
+stra.forEach((str, index, arr) => arr[index] = str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+console.log(stra);
+
+output:
+[ 'Hola', 'Its Me' ]
+
+//Sum of all numbers in an array
+const numbers = [1, 2, 3, 4, 5];
+const sum = (arr) => arr.reduce((total, num) => total + num, 0);
+const result = sum(numbers);
+console.log("Sum of the numbers in the array: " + result);
+
+output:
+Sum of the numbers in the array: 15
+
+
+//Return all the prime numbers in an array
+let arr = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+let s = (arr) => arr.filter((num) => {
+  for (let i = 2; i < num; i++) {
+    if (num % i === 0) {
+      return false;
+    }
+  }
+  return num > 1;
+});
+console.log(s(arr));
+
+output:
+[ 2, 3, 5, 7 ]
+
+//Return all the palindromes in an array
+const isPalindrome = str => str === str.split('').reverse().join('');
+const filterPalindromes = arr => arr.filter(word => isPalindrome(word));
+const inputArray = ["hello", "malayalam", "mom", "radar"];
+const result = filterPalindromes(inputArray);
+console.log(result);
+
+output:
+[ 'malayalam', 'mom', 'radar' ]
+
+
