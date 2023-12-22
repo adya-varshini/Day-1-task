@@ -17,19 +17,17 @@ countries.forEach(country => {
   console.log(`Name: ${country.name}`);
   console.log(`Capital: ${country.capital}`);
   console.log(`Flag: ${country.flag}`);
-
 });
 
 Print the total population of countries using reduce function
-
 const totalPopulation = countries.reduce((accumulator, country) => {
   return accumulator + country.population;
 }, 0);
 console.log("Total Population: ${totalPopulation} lakhs");
 
+
 Print the country that uses US dollars as currency.
 const c = countries.find(country => country.currency === 'US Dollar');
-
 if (c) {
   console.log(`Country using US Dollar: ${usDollarCountry.name}`);
 } else {
