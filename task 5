@@ -1,0 +1,37 @@
+ ARRAY METHODS
+
+Solving problems using array functions on rest countries data (https://restcountries.com/v3.1/all).
+
+Get all the countries from Asia continent /region using Filter function
+const countries=//the given array or data
+const a = countries.filter(country => country.continent === 'Asia');
+console.log(a);
+
+Get all the countries with a population of less than 2 lakhs using Filter function
+const b = countries.filter(country => country.population < 200);
+console.log(b);
+
+Print the following details name, capital, flag, using forEach function
+countries.forEach(country => {
+  countries.forEach(country => {
+  console.log(`Name: ${country.name}`);
+  console.log(`Capital: ${country.capital}`);
+  console.log(`Flag: ${country.flag}`);
+
+});
+
+Print the total population of countries using reduce function
+
+const totalPopulation = countries.reduce((accumulator, country) => {
+  return accumulator + country.population;
+}, 0);
+console.log("Total Population: ${totalPopulation} lakhs");
+
+Print the country that uses US dollars as currency.
+const c = countries.find(country => country.currency === 'US Dollar');
+
+if (c) {
+  console.log(`Country using US Dollar: ${usDollarCountry.name}`);
+} else {
+  console.log('No country found ');
+}
