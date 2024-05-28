@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+</head>
+<body>
+    <div id="countdown"></div>
+
+    <script>
+        function displayCountdown(count) {
+            document.getElementById('countdown').innerText = count;
+        }
+
+        function startCountdown() {
+            setTimeout(() => {
+                displayCountdown(10);
+                setTimeout(() => {
+                    displayCountdown(9);
+                    setTimeout(() => {
+                        displayCountdown(8);
+                        setTimeout(() => {
+                            displayCountdown(7);
+                            setTimeout(() => {
+                                displayCountdown(6);
+                                setTimeout(() => {
+                                    displayCountdown(5);
+                                    setTimeout(() => {
+                                        displayCountdown(4);
+                                        setTimeout(() => {
+                                            displayCountdown(3);
+                                            setTimeout(() => {
+                                                displayCountdown(2);
+                                                setTimeout(() => {
+                                                    displayCountdown(1);
+                                                    setTimeout(() => {
+                                                        document.getElementById('countdown').innerText = "Happy Independence Day";
+                                                    }, 1000);
+                                                }, 1000);
+                                            }, 1000);
+                                        }, 1000);
+                                    }, 1000);
+                                }, 1000);
+                            }, 1000);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }
+
+       
+        startCountdown();
+    </script>
+</body>
+</html>
