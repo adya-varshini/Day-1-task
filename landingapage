@@ -1,0 +1,356 @@
+sections of the landing page:
+   1)navbar
+   2)header
+   3)features
+   4)about
+   5)call to action
+   6)contact
+   7)footer
+
+
+1)
+import React from 'react';
+
+function Navbar() {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div className="container">
+                <a className="navbar-brand" href="#page-top">Start Bootstrap</a>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarResponsive">
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item"><a className="nav-link" href="#about">About</a></li>
+                        <li className="nav-item"><a className="nav-link" href="#services">Services</a></li>
+                        <li className="nav-item"><a className="nav-link" href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    );
+}
+
+export default Navbar;
+
+
+2)import React from 'react';
+
+function Header() {
+    return (
+        <header className="masthead text-center text-white">
+            <div className="masthead-content">
+                <div className="container">
+                    <h1 className="masthead-heading mb-0">One Page Wonder</h1>
+                    <h2 className="masthead-subheading mb-0">Will Rock Your Socks Off</h2>
+                    <a href="#about" className="btn btn-primary btn-xl rounded-pill mt-5">Learn More</a>
+                </div>
+            </div>
+        </header>
+    );
+}
+
+export default Header;
+
+3)
+import React from 'react';
+
+function Features() {
+    return (
+        <section className="features-icons bg-light text-center">
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-4">
+                        <div className="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                            <div className="features-icons-icon d-flex">
+                                <i className="icon-screen-desktop m-auto text-primary"></i>
+                            </div>
+                            <h3>Fully Responsive</h3>
+                            <p className="lead mb-0">This theme will look great on any device, no matter the size!</p>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                            <div className="features-icons-icon d-flex">
+                                <i className="icon-layers m-auto text-primary"></i>
+                            </div>
+                            <h3>Bootstrap 4 Ready</h3>
+                            <p className="lead mb-0">Featuring the latest build of the new Bootstrap 4 framework!</p>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="features-icons-item mx-auto mb-0 mb-lg-3">
+                            <div className="features-icons-icon d-flex">
+                                <i className="icon-check m-auto text-primary"></i>
+                            </div>
+                            <h3>Easy to Use</h3>
+                            <p className="lead mb-0">Ready to use with your own content, or customize the source files!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+export default Features;
+
+4)
+import React from 'react';
+
+function About() {
+    return (
+        <section className="about bg-primary text-center text-white">
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-8 mx-auto">
+                        <h2 className="section-heading">We've got what you need!</h2>
+                        <p className="lead">Start Bootstrap has everything you need to get your new website up and running in no time! All of the templates and themes on Start Bootstrap are open source, free to download, and easy to use. No strings attached!</p>
+                        <a href="#services" className="btn btn-light btn-xl rounded-pill mt-5">Get Started!</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+export default About;
+5)
+import React from 'react';
+
+function CallToAction() {
+    return (
+        <section className="call-to-action text-white text-center">
+            <div className="overlay"></div>
+            <div className="container">
+                <div className="row">
+                    <div className="col-xl-9 mx-auto">
+                        <h2 className="mb-4">Ready to get started? Sign up now!</h2>
+                    </div>
+                    <div className="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                        <form>
+                            <div className="form-row">
+                                <div className="col-12 col-md-9 mb-2 mb-md-0">
+                                    <input type="email" className="form-control form-control-lg" placeholder="Enter your email..." />
+                                </div>
+                                <div className="col-12 col-md-3">
+                                    <button type="submit" className="btn btn-primary btn-block btn-lg">Sign Up!</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+export default CallToAction;
+6)
+import React from 'react';
+
+function Contact() {
+    return (
+        <section className="contact bg-light">
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-8 mx-auto text-center">
+                        <h2 className="section-heading">Let's Get In Touch!</h2>
+                        <p className="lead">Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                        <ul className="list-inline">
+                            <li className="list-inline-item">
+                                <a href="tel:+1234567890">
+                                    <i className="fas fa-phone fa-stack-1x fa-inverse"></i>
+                                    <span className="contact-method"> (123) 456-7890</span>
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a href="mailto:your-email@your-domain.com">
+                                    <i className="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                                    <span className="contact-method"> your-email@your-domain.com</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+export default Contact;
+7)
+import React from 'react';
+
+function Footer() {
+    return (
+        <footer className="footer text-center">
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-4 mb-5 mb-lg-0">
+                        <h4 className="text-uppercase mb-4">Location</h4>
+                        <p className="lead mb-0">
+                            1234 Somewhere Road
+                            <br />
+                            City, State 56789
+                        </p>
+                    </div>
+                    <div className="col-lg-4 mb-5 mb-lg-0">
+                        <h4 className="text-uppercase mb-4">Around the Web</h4>
+                        <ul className="list-inline">
+                            <li className="list-inline-item">
+                                <a className="btn btn-outline-light btn-social text-center rounded-circle" href="#!">
+                                    <i className="fab fa-fw fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="btn btn-outline-light btn-social text-center rounded-circle" href="#!">
+                                    <i className="fab fa-fw fa-google-plus-g"></i>
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="btn btn-outline-light btn-social text-center rounded-circle" href="#!">
+                                    <i className="fab fa-fw fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="btn btn-outline-light btn-social text-center rounded-circle" href="#!">
+                                    <i className="fab fa-fw fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                            <li className="list-inline-item">
+                                <a className="btn btn-outline-light btn-social text-center rounded-circle" href="#!">
+                                    <i className="fab fa-fw fa-dribbble"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="col-lg-4">
+                        <h4 className="text-uppercase mb-4">About Freelancer</h4>
+                        <p className="lead mb-0">
+                            Freelance is a free to use, MIT licensed Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+}
+
+export default Footer;
+
+-----in the landing page -----
+import React from 'react';
+import Navbar from './components/Navbar';
+import Header from './components/Header';
+import Features from './components/Features';
+import About from './components/About';
+import CallToAction from './components/CallToAction';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import './App.css';
+
+function App() {
+    return (
+        <div className="App">
+            <Navbar />
+            <Header />
+            <Features />
+            <About />
+            <CallToAction />
+            <Contact />
+            <Footer />
+        </div>
+    );
+}
+
+export default App;
+
+ css styling 
+body {
+    font-family: Arial, sans-serif;
+}
+
+.App {
+    text-align: center;
+}
+
+.masthead {
+    position: relative;
+    background-color: #343a40;
+    background: url('https://startbootstrap.github.io/startbootstrap-landing-page/assets/img/bg-masthead.jpg') no-repeat center center;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
+.masthead .masthead-content {
+    z-index: 1;
+    position: relative;
+    padding: 3rem;
+    border-radius: .3rem;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.masthead .masthead-content .masthead-heading,
+.masthead .masthead-content .masthead-subheading {
+    margin-bottom: 1rem;
+}
+
+.features-icons {
+    padding: 7rem 0;
+}
+
+.features-icons-item {
+    max-width: 20rem;
+}
+
+.features-icons-item .features-icons-icon {
+    height: 7rem;
+}
+
+.features-icons-icon i {
+    font-size: 4.5rem;
+}
+
+.about {
+    padding: 7rem 0;
+}
+
+.call-to-action {
+    position: relative;
+    padding: 7rem 0;
+    background: #222;
+}
+
+.call-to-action .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.contact {
+    padding: 7rem 0;
+}
+
+.footer {
+    padding: 4rem 0;
+    background: #222;
+    color: white;
+}
+
+npm install bootstrap font-awesome
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
+import './index.css';
+import App from './App';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
