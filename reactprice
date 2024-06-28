@@ -1,0 +1,88 @@
+import React from 'react';
+import './index.css';
+
+const plans = [
+    {
+        title: "FREE",
+        price: "$0/month",
+        features: [
+            "Single User",
+            "50GB Storage",
+            "Unlimited Public Projects",
+            "Community Access",
+            "Unlimited Private Projects",
+            "Dedicated Phone Support",
+            "Free Subdomain",
+            "Monthly Status Reports"
+        ],
+        unavailable: [4, 5, 6, 7]
+    },
+    {
+        title: "PLUS",
+        price: "$9/month",
+        features: [
+            "5 Users",
+            "50GB Storage",
+            "Unlimited Public Projects",
+            "Community Access",
+            "Unlimited Private Projects",
+            "Dedicated Phone Support",
+            "Free Subdomain",
+            "Monthly Status Reports"
+        ],
+        unavailable: [7]
+    },
+    {
+        title: "PRO",
+        price: "$49/month",
+        features: [
+            "Unlimited Users",
+            "50GB Storage",
+            "Unlimited Public Projects",
+            "Community Access",
+            "Unlimited Private Projects",
+            "Dedicated Phone Support",
+            "Free Subdomain",
+            "Monthly Status Reports"
+        ],
+        unavailable: []
+    }
+];
+
+const PlanCard = ({ title, price, features, unavailable }) => {
+    return (
+        <div className="plan-card">
+            <h3>{title}</h3>
+            <h4>{price}</h4>
+            <ul>
+                {features.map((feature, index) => (
+                    <li key={index} className={unavailable.includes(index) ? "unavailable" : ""}>
+                        {feature}
+                    </li>
+                ))}
+            </ul>
+            <button>BUTTON</button>
+        </div>
+    );
+};
+
+function App() {
+    return (
+        <div className="App">
+            <h1>Pricing Plans</h1>
+            <div className="plans-container">
+                {plans.map((plan, index) => (
+                    <PlanCard
+                        key={index}
+                        title={plan.title}
+                        price={plan.price}
+                        features={plan.features}
+                        unavailable={plan.unavailable}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+export default App;
