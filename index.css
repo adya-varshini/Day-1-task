@@ -1,0 +1,59 @@
+.App {
+    text-align: center;
+    padding: 20px;
+}
+
+.plans-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.plan-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.plan-card h4 {
+    margin: 10px 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.plan-card ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.plan-card li {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.plan-card li.unavailable {
+    color: #ccc;
+    text-decoration: line-through;
+}
+
+.plan-card button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.plan-card button:hover {
+    background: #0056b3;
+}
