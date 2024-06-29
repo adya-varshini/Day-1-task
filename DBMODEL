@@ -1,0 +1,68 @@
+----------------------DB MODEL FOR GUVI ZEN CLASS------------------------------------
+DB MODEL INCLUDES:
+1)Users
+     =Students and faculties.
+     =Common attributes: ID, name, email, role (student or instructor), etc.
+2)Courses
+    =Attributes: ID, title, description, instructor_id (foreign key referencing Users), etc.
+3)Classes
+    =Attributes: ID, course_id (foreign key referencing Courses), date, time, duration, etc.
+4)Enrollments
+    =Attributes: ID, user_id (foreign key referencing Users), course_id (foreign key referencing Courses), enrollment_date, etc.
+5)Assignments
+    =Attributes: ID, course_id (foreign key referencing Courses), title, description, due_date, etc.
+6)Submissions
+    =Attributes: ID, assignment_id (foreign key referencing Assignments), student_id (foreign key referencing Users), submission_date, grade, etc.
+
+SQL:
+CREATE TABLE Users (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Role ENUM('student', 'instructor') NOT NULL
+);
+
+CREATE TABLE Courses (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Instructor_ID INT,
+    FOREIGN KEY (Instructor_ID) REFERENCES Users(ID)
+);
+
+CREATE TABLE Classes (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Course_ID INT,
+    Date DATE NOT NULL,
+    Time TIME NOT NULL,
+    Duration INT,
+    FOREIGN KEY (Course_ID) REFERENCES Courses(ID)
+);
+
+CREATE TABLE Enrollments (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    User_ID INT,
+    Course_ID INT,
+    Enrollment_Date DATE NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES Users(ID),
+    FOREIGN KEY (Course_ID) REFERENCES Courses(ID)
+);
+
+CREATE TABLE Assignments (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Course_ID INT,
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Due_Date DATE NOT NULL,
+    FOREIGN KEY (Course_ID) REFERENCES Courses(ID)
+);
+
+CREATE TABLE Submissions (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Assignment_ID INT,
+    Student_ID INT,
+    Submission_Date DATE NOT NULL,
+    Grade VARCHAR(10),
+    FOREIGN KEY (Assignment_ID) REFERENCES Assignments(ID),
+    FOREIGN KEY (Student_ID) REFERENCES Users(ID)
+);
