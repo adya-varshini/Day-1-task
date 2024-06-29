@@ -1,0 +1,184 @@
+----------------------REACT ROUTER TASK----------------------------------
+COMPONENTS:------------------
+    --->All.js
+    --->FullstackDevelopment.js
+    --->CyberSecurity.js
+    --->Career.js
+--------------------------------------------------------------------------
+------All.js
+import React from 'react';
+
+const All = () => {
+  return (
+    <div>
+      <h2>All Courses</h2>
+      <div>
+        <h3>Python Objects 101: How to</h3>
+        <p>Python programming basics...</p>
+      </div>
+      <div>
+        <h3>Machine Learning Must-</h3>
+        <p>Introduction to machine learning...</p>
+      </div>
+      <div>
+        <h3>Unlocking the Power of NLP</h3>
+        <p>Natural Language Processing basics...</p>
+      </div>
+    </div>
+  );
+};
+
+export default All;
+
+------FullStackDevelopment.js
+import React from 'react';
+
+const FullStackDevelopment = () => {
+  return (
+    <div>
+      <h2>Full Stack Development</h2>
+      <p>Content for Full Stack Development...</p>
+    </div>
+  );
+};
+
+export default FullStackDevelopment;
+--------------------------------------------------------------
+----DataScience.js
+import React from 'react';
+
+const DataScience = () => {
+  return (
+    <div>
+      <h2>Data Science</h2>
+      <p>Content for Data Science...</p>
+    </div>
+  );
+};
+
+export default DataScience;
+---------------------------------------------------------------------------
+-----CyberSecurity.js
+import React from 'react';
+
+const CyberSecurity = () => {
+  return (
+    <div>
+      <h2>Cyber Security</h2>
+      <p>Content for Cyber Security...</p>
+    </div>
+  );
+};
+
+export default CyberSecurity;
+---------------------------------------------------------------------------
+-----Career.js
+import React from 'react';
+
+const Career = () => {
+  return (
+    <div>
+      <h2>Career</h2>
+      <p>Content for Career...</p>
+    </div>
+  );
+};
+
+export default Career;
+----------------------------------------------------------------------------
+-----Navbar.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Navbar = () => {
+  return (
+    <nav>
+      <ul>
+        <li><Link to="/">All</Link></li>
+        <li><Link to="/fullstackdevelopment">Full Stack Development</Link></li>
+        <li><Link to="/datascience">Data Science</Link></li>
+        <li><Link to="/cybersecurity">Cyber Security</Link></li>
+        <li><Link to="/career">Career</Link></li>
+      </ul>
+    </nav>
+  );
+};
+
+export default Navbar;
+---------------------------------------------------------------------------------
+-------styles.css
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background-color: #f8f9fa;
+  padding: 10px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  color: #007bff;
+}
+
+div {
+  padding: 20px;
+}
+
+h2 {
+  color: #007bff;
+}
+
+h3 {
+  color: #000;
+}
+-----------------------------------------------------------------------------
+----------App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import All from './components/All';
+import FullStackDevelopment from './components/FullStackDevelopment';
+import DataScience from './components/DataScience';
+import CyberSecurity from './components/CyberSecurity';
+import Career from './components/Career';
+import './styles.css';
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<All />} />
+          <Route path="/fullstackdevelopment" element={<FullStackDevelopment />} />
+          <Route path="/datascience" element={<DataScience />} />
+          <Route path="/cybersecurity" element={<CyberSecurity />} />
+          <Route path="/career" element={<Career />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+------------------------------------------------------------------------
+npm start
