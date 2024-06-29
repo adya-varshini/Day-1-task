@@ -1,0 +1,378 @@
+-----------------------------GMAIL CLONE FRONTEND------------------------------------
+src
+├── components
+│   ├── AppNavbar.js
+│   ├── ComposeEmail.js
+│   ├── EmailDetail.js
+│   ├── EmailList.js
+│   ├── Statistics.js
+├── pages/
+│   ├── Inbox.js
+│   ├── Sent.js
+│   ├── Compose.js
+├── styles/
+│   ├── styles.css
+├── App.js
+├── index.js
+
+-----------------------------------------------------------------------------------------
+
+--------------src/index.js-------------------
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/styles.css'; // Import the custom styles
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+-----------------src/App.js-------------------------
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import AppNavbar from './components/AppNavbar';
+import Inbox from './pages/Inbox';
+import Sent from './pages/Sent';
+import Compose from './pages/Compose';
+import EmailDetail from './components/EmailDetail';
+
+function App() {
+  return (
+    <Router>
+      <AppNavbar />
+      <div className="container mt-4">
+        <Switch>
+          <Route path="/inbox" component={Inbox} />
+          <Route path="/sent" component={Sent} />
+          <Route path="/compose" component={Compose} />
+          <Route path="/email/:id" component={EmailDetail} />
+          <Route path="/" component={Inbox} />
+        </Switch>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+
+------------------src/components/AppNavbar.js-----------------
+import React from 'react';
+import { Navbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
+function AppNavbar() {
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar.Brand as={Link} to="/">Gmail Clone</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link as={Link} to="/inbox">Inbox</Nav.Link>
+          <Nav.Link as={Link} to="/sent">Sent</Nav.Link>
+          <Nav.Link as={Link} to="/compose">Compose</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  );
+}
+
+export default AppNavbar;
+
+---------------------src/components/EmailList.js-----------------
+import React from 'react';
+import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
+function EmailList({ emails }) {
+  return (
+    <div className="email-list">
+      {emails.map(email => (
+        <Card key={email.id} className="mb-3">
+          <Card.Body>
+            <Card.Title>{email.subject}</Card.Title>
+            <Card.Text>{email.sender}</Card.Text>
+            <Button as={Link} to={`/email/${email.id}`} variant="primary">View</Button>
+          </Card.Body>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export default EmailList;
+
+----------------src/components/ComposeEmail.js---------------------
+import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
+
+function ComposeEmail() {
+  const [formData, setFormData] = useState({
+    to: '',
+    subject: '',
+    body: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Send email to the backend (replace with your API endpoint)
+    fetch('http://localhost:5000/api/emails/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Email sent:', data);
+      })
+      .catch(error => console.error('Error sending email:', error));
+  };
+
+  return (
+    <Form onSubmit={handleSubmit} className="compose-email-form">
+      <Form.Group controlId="formTo">
+        <Form.Label>To</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="Enter recipient email"
+          name="to"
+          value={formData.to}
+          onChange={handleChange}
+          required
+        />
+      </Form.Group>
+      <Form.Group controlId="formSubject">
+        <Form.Label>Subject</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Enter subject"
+          name="subject"
+          value={formData.subject}
+          onChange={handleChange}
+          required
+        />
+      </Form.Group>
+      <Form.Group controlId="formBody">
+        <Form.Label>Body</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={5}
+          placeholder="Enter email body"
+          name="body"
+          value={formData.body}
+          onChange={handleChange}
+          required
+        />
+      </Form.Group>
+      <Button variant="primary" type="submit">Send</Button>
+    </Form>
+  );
+}
+
+export default ComposeEmail;
+
+--------------------src/components/EmailDetail.js-------------------
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+
+function EmailDetail() {
+  const { id } = useParams();
+  const [email, setEmail] = useState(null);
+
+  useEffect(() => {
+    // Fetch email details from the backend (replace with your API endpoint)
+    fetch(`http://localhost:5000/api/emails/${id}`)
+      .then(response => response.json())
+      .then(data => setEmail(data))
+      .catch(error => console.error('Error fetching email details:', error));
+  }, [id]);
+
+  if (!email) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Card className="email-detail">
+      <Card.Body>
+        <Card.Title>{email.subject}</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">From: {email.sender}</Card.Subtitle>
+        <Card.Text>{email.body}</Card.Text>
+      </Card.Body>
+    </Card>
+  );
+}
+
+export default EmailDetail;
+
+----------------------src/components/Statistics.js---------------------
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+
+function Statistics() {
+  const data = {
+    labels: ['Inbox', 'Sent'],
+    datasets: [
+      {
+        label: 'Number of Emails',
+        data: [12, 19],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  return (
+    <div>
+      <h2>Email Statistics</h2>
+      <Bar data={data} options={options} />
+    </div>
+  );
+}
+
+export default Statistics;
+
+------------------src/pages/Inbox.js-----------------
+import React, { useEffect, useState } from 'react';
+import EmailList from '../components/EmailList';
+
+function Inbox() {
+  const [emails, setEmails] = useState([]);
+
+  useEffect(() => {
+    // Fetch emails from the backend
+    fetch('http://localhost:5000/api/emails/inbox')
+      .then(response => response.json())
+      .then(data => setEmails(data))
+      .catch(error => console.error('Error fetching inbox emails:', error));
+  }, []);
+
+  return (
+    <div>
+      <h2>Inbox</h2>
+      <EmailList emails={emails} />
+    </div>
+  );
+}
+
+export default Inbox;
+
+----------------------src/pages/Sent.js------------
+import React, { useEffect, useState } from 'react';
+import EmailList from '../components/EmailList';
+
+function Sent() {
+  const [emails, setEmails] = useState([]);
+
+  useEffect(() => {
+    // Fetch sent emails from the backend (replace with your API endpoint)
+    fetch('http://localhost:5000/api/emails/sent')
+      .then(response => response.json())
+      .then(data => setEmails(data))
+      .catch(error => console.error('Error fetching sent emails:', error));
+  }, []);
+
+  return (
+    <div>
+      <h2>Sent</h2>
+      <EmailList emails={emails} />
+    </div>
+  );
+}
+
+export default Sent;
+
+-------------------src/pages/Compose.js--------------------
+import React from 'react';
+import ComposeEmail from '../components/ComposeEmail';
+
+function Compose() {
+  return (
+    <div>
+      <h2>Compose Email</h2>
+      <ComposeEmail />
+    </div>
+  );
+}
+
+export default Compose;
+
+-----------------------src/styles/styles.css-----------------------
+
+body {
+  background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Navbar Styles */
+.navbar {
+  margin-bottom: 20px;
+}
+
+/* Email List Styles */
+.email-list .card {
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.email-list .card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Email Detail Styles */
+.email-detail .card {
+  margin-bottom: 20px;
+}
+
+/* Compose Email Styles */
+.compose-email-form .form-group {
+  margin-bottom: 20px;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #4285f4;
+  border-color: #4285f4;
+}
+
+.btn-primary:hover {
+  background-color: #357ae8;
+  border-color: #357ae8;
+}
+
+
+------------------------------------front end done--------------------------------------------------
