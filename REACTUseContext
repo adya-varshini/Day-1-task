@@ -1,0 +1,169 @@
+--------------------------REACT USECONTEXT TASK---------------------------
+context---->CartContext.js
+import React, { createContext, useReducer } from 'react';
+
+const CartContext = createContext();
+
+const initialState = {
+  items: [
+    {
+      id: 1,
+      title: 'iPhone 9',
+      price: 549,
+      quantity: 1,
+      total: 549,
+      thumbnail: 'https://i.dummyjson.com/data/products/1/thumbnail.jpg'
+    },
+    // Add more initial items if necessary
+  ],
+  totalQuantity: 1,
+  totalPrice: 549,
+};
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'INCREASE_QUANTITY':
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload ? { ...item, quantity: item.quantity + 1, total: (item.quantity + 1) * item.price } : item
+        ),
+        totalQuantity: state.totalQuantity + 1,
+        totalPrice: state.totalPrice + state.items.find(item => item.id === action.payload).price,
+      };
+    case 'DECREASE_QUANTITY':
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload && item.quantity > 1 ? { ...item, quantity: item.quantity - 1, total: (item.quantity - 1) * item.price } : item
+        ),
+        totalQuantity: state.totalQuantity - 1,
+        totalPrice: state.totalPrice - state.items.find(item => item.id === action.payload).price,
+      };
+    default:
+      return state;
+  }
+};
+
+const CartProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  const increaseQuantity = (id) => {
+    dispatch({ type: 'INCREASE_QUANTITY', payload: id });
+  };
+
+  const decreaseQuantity = (id) => {
+    dispatch({ type: 'DECREASE_QUANTITY', payload: id });
+  };
+
+  return (
+    <CartContext.Provider value={{ state, increaseQuantity, decreaseQuantity }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export { CartContext, CartProvider };
+-------------------------------------------------------------------------------------------
+----->components for Cart page
+---->CartItem.js
+import React, { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
+
+const CartItem = ({ item }) => {
+  const { increaseQuantity, decreaseQuantity } = useContext(CartContext);
+
+  return (
+    <div className="cart-item">
+      <img src={item.thumbnail} alt={item.title} />
+      <div>
+        <h2>{item.title}</h2>
+        <p>${item.price}</p>
+        <div>
+          <button onClick={() => decreaseQuantity(item.id)}>-</button>
+          <span>{item.quantity}</span>
+          <button onClick={() => increaseQuantity(item.id)}>+</button>
+        </div>
+        <p>Total: ${item.total}</p>
+      </div>
+    </div>
+  );
+};
+
+export default CartItem;
+
+-----------------------------------------------------------------------------------------
+---->Cart.js
+import React, { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
+import CartItem from './CartItem';
+
+const Cart = () => {
+  const { state } = useContext(CartContext);
+
+  return (
+    <div className="cart">
+      <h1>Your Cart</h1>
+      {state.items.map(item => (
+        <CartItem key={item.id} item={item} />
+      ))}
+      <div className="cart-summary">
+        <h2>Summary</h2>
+        <p>Total Quantity: {state.totalQuantity}</p>
+        <p>Total Price: ${state.totalPrice}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;
+----------------------------------------------------------
+----->App.js
+import React from 'react';
+import './App.css';
+import Cart from './components/Cart';
+import { CartProvider } from './context/CartContext';
+
+function App() {
+  return (
+    <CartProvider>
+      <div className="App">
+        <Cart />
+      </div>
+    </CartProvider>
+  );
+}
+
+export default App;
+------------------------------------------------------------------------------------
+----->App.css
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.cart-item {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.cart-item img {
+  width: 100px;
+  margin-right: 20px;
+}
+
+.cart-item div {
+  text-align: left;
+}
+
+.cart-item button {
+  margin: 0 5px;
+}
+
+.cart-summary {
+  margin-top: 20px;
+  text-align: left;
+}
+----------------------------------------------------------------------------
+npm start
+
