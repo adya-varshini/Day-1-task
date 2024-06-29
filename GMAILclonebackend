@@ -1,0 +1,139 @@
+----------------------------------GMAIL CLONE BACKEND CODE ------------------------
+
+├── models/
+│   ├── Email.js
+├── routes/
+│   ├── emailRoutes.js
+├── .env
+├── app.js
+├── server.js
+-----------------------------------------------------------------------------------
+
+--------------------models/Email.js-----------------------
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const emailSchema = new Schema({
+  to: { type: String, required: true },
+  from: { type: String, required: true },
+  subject: { type: String, required: true },
+  body: { type: String, required: true },
+  date: { type: Date, default: Date.now },
+  type: { type: String, enum: ['inbox', 'sent'], required: true }
+});
+
+module.exports = mongoose.model('Email', emailSchema);
+
+-------------------routes/emailRoutes.js---------------------------
+const express = require('express');
+const router = express.Router();
+const Email = require('../models/Email');
+
+// Get inbox emails
+router.get('/inbox', async (req, res) => {
+  try {
+    const emails = await Email.find({ type: 'inbox' });
+    res.json(emails);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get sent emails
+router.get('/sent', async (req, res) => {
+  try {
+    const emails = await Email.find({ type: 'sent' });
+    res.json(emails);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get email by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const email = await Email.findById(req.params.id);
+    if (email == null) {
+      return res.status(404).json({ message: 'Cannot find email' });
+    }
+    res.json(email);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Send email
+router.post('/send', async (req, res) => {
+  const email = new Email({
+    to: req.body.to,
+    from: 'your-email@example.com', // Replace with your email
+    subject: req.body.subject,
+    body: req.body.body,
+    type: 'sent'
+  });
+
+  try {
+    const newEmail = await email.save();
+    res.status(201).json(newEmail);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+module.exports = router;
+
+-----------------------app.js---------------------------------
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const emailRoutes = require('./routes/emailRoutes');
+require('dotenv').config();
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api/emails', emailRoutes);
+
+// Connect to MongoDB
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
+
+module.exports = app;
+
+-------------------------------server.js------------------------------
+const app = require('./app');
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+-----------------------------------------------------------------------
+Connecting MongoDB with Mongoose
+Install Mongoose:---------------------->
+npm install mongoose
+-------------------------------.env--------------------------------
+ .env file at the root of your project to store environment variables such as your MongoDB connection string.
+DATABASE_URL=mongodb://localhost:27017/gmail_clone
+--------------------------------------------------------
+connecting the backend part with frontend ----
+run the server ----
+node server.js
+------------------------------------------------------SUMMARY --------------------------------------------------
+mongod
+cd gmail-clone-backend
+node server.js
+cd gmail-clone-frontend
+npm start
+
+Sum up:
+-Inbox
+-Sent
+-Compose
+-Email Detail
+----------------------------------------------------------------------------------------------------------------------
