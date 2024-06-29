@@ -1,0 +1,182 @@
+----------------------------REACT AXIOS TASK---------------------------------------
+COMPONENTS:
+   --- UserList.js
+   ---UserForm.js
+------------------------------------------------------------------------------------
+----->UserList.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import UserForm from './UserForm';
+
+const UserList = () => {
+  const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+    setUsers(response.data);
+  };
+
+  const addUser = async (user) => {
+    const response = await axios.post('https://jsonplaceholder.typicode.com/users', user);
+    setUsers([...users, response.data]);
+  };
+
+  const updateUser = async (user) => {
+    const response = await axios.put(`https://jsonplaceholder.typicode.com/users/${user.id}`, user);
+    setUsers(users.map((u) => (u.id === user.id ? response.data : u)));
+    setEditingUser(null);
+  };
+
+  const deleteUser = async (id) => {
+    await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  const editUser = (user) => {
+    setEditingUser(user);
+  };
+
+  return (
+    <div>
+      <h1>User List</h1>
+      <UserForm addUser={addUser} updateUser={updateUser} editingUser={editingUser} />
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            {user.name} ({user.email})
+            <button onClick={() => editUser(user)}>Edit</button>
+            <button onClick={() => deleteUser(user.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default UserList;
+
+-------------------------------------------------------------------------------------
+----->UserForm.js
+import React, { useState, useEffect } from 'react';
+
+const UserForm = ({ addUser, updateUser, editingUser }) => {
+  const [user, setUser] = useState({ name: '', email: '' });
+
+  useEffect(() => {
+    if (editingUser) {
+      setUser(editingUser);
+    } else {
+      setUser({ name: '', email: '' });
+    }
+  }, [editingUser]);
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editingUser) {
+      updateUser(user);
+    } else {
+      addUser(user);
+    }
+    setUser({ name: '', email: '' });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="name"
+        value={user.name}
+        onChange={handleChange}
+        placeholder="Name"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        value={user.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+      />
+      <button type="submit">{editingUser ? 'Update User' : 'Add User'}</button>
+    </form>
+  );
+};
+
+export default UserForm;
+---------------------------------------------------------------------------------------
+---->integarte the axios
+---->App.js
+import React from 'react';
+import './App.css';
+import UserList from './components/UserList';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>CRUD Operations with Axios</h1>
+      </header>
+      <UserList />
+    </div>
+  );
+}
+
+export default App;
+---------------------------------------------
+----->App.css
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+form {
+  margin: 20px 0;
+}
+
+input {
+  margin: 0 10px;
+}
+
+button {
+  margin: 0 5px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+------------------------------------------------------------------------
+---->README.md
+# React CRUD App with Axios
+---> Clone the repository:
+  git clone https://github.com/yourusername/crud-app.git
+npm start
+things it does:
+=Display all existing users
+=Add new users
+=Edits existing users
+=Delete users
+
+
