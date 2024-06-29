@@ -1,0 +1,174 @@
+------------------------- REACT REDUX TASK ------------------------------
+--->store.js
+import { configureStore } from '@reduxjs/toolkit';
+import cartReducer from './slices/cartSlice';
+
+export const store = configureStore({
+  reducer: {
+    cart: cartReducer,
+  },
+});
+
+export default store;
+------------------------------------------------------------------------
+--->cartSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  items: [
+    {
+      id: 1,
+      title: 'iPhone 9',
+      price: 549,
+      quantity: 1,
+      total: 549,
+      thumbnail: 'https://i.dummyjson.com/data/products/1/thumbnail.jpg'
+    },
+    {
+      id: 2,
+      title: 'iPhone X',
+      price: 899,
+      quantity: 1,
+      total: 899,
+      thumbnail: 'https://i.dummyjson.com/data/products/2/thumbnail.jpg'
+    }
+    // Add more initial items if necessary
+  ],
+  totalQuantity: 2,
+  totalPrice: 1448,
+};
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    increaseQuantity: (state, action) => {
+      const item = state.items.find(item => item.id === action.payload);
+      item.quantity += 1;
+      item.total = item.quantity * item.price;
+      state.totalQuantity += 1;
+      state.totalPrice += item.price;
+    },
+    decreaseQuantity: (state, action) => {
+      const item = state.items.find(item => item.id === action.payload);
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+        item.total = item.quantity * item.price;
+        state.totalQuantity -= 1;
+        state.totalPrice -= item.price;
+      }
+    },
+    removeItem: (state, action) => {
+      const item = state.items.find(item => item.id === action.payload);
+      state.totalQuantity -= item.quantity;
+      state.totalPrice -= item.total;
+      state.items = state.items.filter(item => item.id !== action.payload);
+    }
+  }
+});
+
+export const { increaseQuantity, decreaseQuantity, removeItem } = cartSlice.actions;
+
+export default cartSlice.reducer;
+--------------------------------------------------------------------------------
+---->CartItem.js
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { increaseQuantity, decreaseQuantity, removeItem } from '../slices/cartSlice';
+
+const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <div className="cart-item">
+      <img src={item.thumbnail} alt={item.title} />
+      <div>
+        <h2>{item.title}</h2>
+        <p>${item.price}</p>
+        <div>
+          <button onClick={() => dispatch(decreaseQuantity(item.id))}>-</button>
+          <span>{item.quantity}</span>
+          <button onClick={() => dispatch(increaseQuantity(item.id))}>+</button>
+        </div>
+        <p>Total: ${item.total}</p>
+        <button onClick={() => dispatch(removeItem(item.id))}>Remove</button>
+      </div>
+    </div>
+  );
+};
+
+export default CartItem;
+---------------------------------------------------------------------------------------
+--->Cart.js
+import React from 'react';
+import { useSelector } from 'react-redux';
+import CartItem from './CartItem';
+
+const Cart = () => {
+  const { items, totalQuantity, totalPrice } = useSelector(state => state.cart);
+
+  return (
+    <div className="cart">
+      <h1>Your Cart</h1>
+      {items.map(item => (
+        <CartItem key={item.id} item={item} />
+      ))}
+      <div className="cart-summary">
+        <h2>Summary</h2>
+        <p>Total Quantity: {totalQuantity}</p>
+        <p>Total Price: ${totalPrice}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;
+------------------------------------------------------------------------------------
+----->App.js
+import React from 'react';
+import './App.css';
+import Cart from './components/Cart';
+import { Provider } from 'react-redux';
+import store from './store';
+
+function App() {
+  return (
+    <Provider store={store}>
+      <div className="App">
+        <Cart />
+      </div>
+    </Provider>
+  );
+}
+
+export default App;
+-------------------------------------------------------------------------------
+---->App.css
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.cart-item {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.cart-item img {
+  width: 100px;
+  margin-right: 20px;
+}
+
+.cart-item div {
+  text-align: left;
+}
+
+.cart-item button {
+  margin: 0 5px;
+}
+
+.cart-summary {
+  margin-top: 20px;
+  text-align: left;
+}
+---------------------------------------------------------------------------
