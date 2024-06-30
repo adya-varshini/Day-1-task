@@ -1,0 +1,141 @@
+---------------------------------HALL BOOKING APPLICATION-------------------------------------
+hall-booking/
+├── server.js
+├── models/
+│   ├── Room.js
+│   └── Booking.js
+├── routes/
+│   ├── roomRoutes.js
+│   └── bookingRoutes.js
+└── config/
+|    └── database.js
+-------------------------------------------------------------------------------------
+--->server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const roomRoutes = require('./routes/roomRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
+
+mongoose.connect('mongodb://localhost:27017/hall-booking', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+app.use('/api/rooms', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+---------------------------------------------------------------------------
+---->room.js
+const mongoose = require('mongoose');
+
+const roomSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    seats: { type: Number, required: true },
+    amenities: { type: String, required: true },
+    pricePerHour: { type: Number, required: true },
+});
+
+const Room = mongoose.model('Room', roomSchema);
+
+module.exports = Room;
+------------------------------------------------------------------------------
+---->Booking.js
+const mongoose = require('mongoose');
+
+const bookingSchema = new mongoose.Schema({
+    customerName: { type: String, required: true },
+    date: { type: Date, required: true },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: true },
+    roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
+});
+
+const Booking = mongoose.model('Booking', bookingSchema);
+
+module.exports = Booking;
+--------------------------------------------------------------------------------------------
+----->roomRoutes.js
+const express = require('express');
+const router = express.Router();
+const Room = require('../models/Room');
+
+
+router.post('/', async (req, res) => {
+    const { name, seats, amenities, pricePerHour } = req.body;
+
+    const newRoom = new Room({ name, seats, amenities, pricePerHour });
+    await newRoom.save();
+
+    res.status(201).send(newRoom);
+});
+
+
+router.get('/', async (req, res) => {
+    const rooms = await Room.find().populate('bookings');
+
+    res.status(200).send(rooms);
+});
+
+module.exports = router;
+-----------------------------------------------------------------------------------------
+----->bookingRoutes.js
+const express = require('express');
+const router = express.Router();
+const Booking = require('../models/Booking');
+const Room = require('../models/Room');
+
+
+router.post('/', async (req, res) => {
+    const { customerName, date, startTime, endTime, roomId } = req.body;
+
+    const newBooking = new Booking({ customerName, date, startTime, endTime, roomId });
+    await newBooking.save();
+
+    res.status(201).send(newBooking);
+});
+
+
+router.get('/rooms', async (req, res) => {
+    const bookings = await Booking.find().populate('roomId');
+
+    res.status(200).send(bookings);
+});
+
+router.get('/customers', async (req, res) => {
+    const customers = await Booking.find().populate('roomId');
+
+    res.status(200).send(customers);
+});
+router.get('/customer/:customerName', async (req, res) => {
+    const { customerName } = req.params;
+    const bookings = await Booking.find({ customerName }).populate('roomId');
+
+    res.status(200).send(bookings);
+});
+module.exports = router;
+------------------------------------------------------------------------------------------
+---->database.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/hall-booking', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('Connected to the database');
+});
+
+module.exports = db;
+-------------------------------------------------------------------------------------
