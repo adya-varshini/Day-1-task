@@ -1,0 +1,125 @@
+-------------------------------------MongoDB Task-------------------------------------------------------
+1)Users
+{
+    _id: ObjectId(""),
+    name: String,
+    email: String,
+    role: String,
+    mentor_id: ObjectId("") 
+}
+2)Codekata
+{
+    _id: ObjectId(""),
+    user_id: ObjectId(""), 
+    problems_solved: Number
+}
+3)Attendance
+{
+    _id: ObjectId(""),
+    user_id: ObjectId(""), 
+    date: Date,
+    status: String 
+}
+4)Topics
+{
+    _id: ObjectId(""),
+    topic_name: String,
+    date: Date
+}
+5)Tasks
+{
+    _id: ObjectId(""),
+    task_name: String,
+    date: Date,
+    submitted: Boolean
+}
+6)Company Drives
+{
+    _id: ObjectId(""),
+    company_name: String,
+    date: Date,
+    students: [ObjectId("")] 
+}
+7)Mentors
+{
+    _id: ObjectId(""),
+    name: String,
+    mentees: [ObjectId("")]
+}
+
+Find all the topics and tasks which are thought in the month of October.
+db.topics.find({
+    date: {
+        $gte: ISODate("2020-10-01T00:00:00Z"),
+        $lt: ISODate("2020-11-01T00:00:00Z")
+    }
+});
+
+db.tasks.find({
+    date: {
+        $gte: ISODate("2020-10-01T00:00:00Z"),
+        $lt: ISODate("2020-11-01T00:00:00Z")
+    }
+});
+
+Find all the company drives which appeared between 15 oct-2020 and 31-oct-2020.
+db.company_drives.find({
+    date: {
+        $gte: ISODate("2020-10-15T00:00:00Z"),
+        $lt: ISODate("2020-11-01T00:00:00Z")
+    }
+});
+
+Find all the company drives and students who are appeared for the placement.
+db.company_drives.aggregate([
+    {
+        $lookup: {
+            from: "users",
+            localField: "students",
+            foreignField: "_id",
+            as: "students_details"
+        }
+    }
+]);
+
+Find the number of problems solved by the user in codekata.
+db.codekata.find({ user_id: ObjectId("USER_ID") }).sum("problems_solved");
+
+Find all the mentors with who has the mentee's count more than 15.
+db.mentors.find({
+    "mentees.15": { $exists: true }
+});
+
+Find the number of users who are absent and task is not submitted  between 15 oct-2020 and 31-oct-2020.
+db.users.aggregate([
+    {
+        $lookup: {
+            from: "attendance",
+            localField: "_id",
+            foreignField: "user_id",
+            as: "attendance"
+        }
+    },
+    {
+        $lookup: {
+            from: "tasks",
+            localField: "_id",
+            foreignField: "user_id",
+            as: "tasks"
+        }
+    },
+    {
+        $match: {
+            "attendance.date": {
+                $gte: ISODate("2020-10-15T00:00:00Z"),
+                $lt: ISODate("2020-11-01T00:00:00Z")
+            },
+            "attendance.status": "absent",
+            "tasks.submitted": false
+        }
+    },
+    {
+        $count: "users_absent_and_tasks_not_submitted"
+    }
+]);
+
