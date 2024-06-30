@@ -1,0 +1,171 @@
+---------------------------- URL SHORTENER APPLICATION ---------------------------------
+----->BACKEND
+--->User.js
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const UserSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  password: { type: String, required: true },
+  isActive: { type: Boolean, default: false },
+});
+
+UserSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
+
+module.exports = mongoose.model('User', UserSchema);
+---->URL.js
+const mongoose = require('mongoose');
+
+const URLSchema = new mongoose.Schema({
+  originalURL: { type: String, required: true },
+  shortURL: { type: String, required: true, unique: true },
+  createdAt: { type: Date, default: Date.now },
+  clickCount: { type: Number, default: 0 },
+});
+
+module.exports = mongoose.model('URL', URLSchema);
+--->Auth.js
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const User = require('../models/User');
+
+const router = express.Router();
+const JWT_SECRET = 'your_jwt_secret';
+const transporter = nodemailer.createTransport({ /* SMTP configuration */ });
+
+router.post('/register', async (req, res) => {
+  const { email, firstName, lastName, password } = req.body;
+  const user = new User({ email, firstName, lastName, password });
+  await user.save();
+
+  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
+  const url = `http://localhost:3000/activate/${token}`;
+
+  await transporter.sendMail({
+    to: email,
+    subject: 'Activate your account',
+    html: `Click <a href="${url}">here</a> to activate your account`,
+  });
+
+  res.send('Registration successful! Please check your email to activate your account.');
+});
+
+router.post('/activate/:token', async (req, res) => {
+  const { token } = req.params;
+  try {
+    const { id } = jwt.verify(token, JWT_SECRET);
+    await User.findByIdAndUpdate(id, { isActive: true });
+    res.send('Account activated successfully!');
+  } catch (error) {
+    res.status(400).send('Invalid or expired token');
+  }
+});
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user || !await bcrypt.compare(password, user.password)) {
+    return res.status(400).send('Invalid credentials');
+  }
+  if (!user.isActive) {
+    return res.status(400).send('Account not activated');
+  }
+  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
+  res.json({ token });
+});
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).send('User not found');
+  }
+
+  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+  const url = `http://localhost:3000/reset-password/${token}`;
+
+  await transporter.sendMail({
+    to: email,
+    subject: 'Reset your password',
+    html: `Click <a href="${url}">here</a> to reset your password`,
+  });
+
+  res.send('Password reset email sent!');
+});
+
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    const { id } = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(id);
+    user.password = password;
+    await user.save();
+    res.send('Password reset successful!');
+  } catch (error) {
+    res.status(400).send('Invalid or expired token');
+  }
+});
+
+module.exports = router;
+------->url.js
+const express = require('express');
+const shortid = require('shortid');
+const URL = require('../models/URL');
+
+const router = express.Router();
+
+router.post('/shorten', async (req, res) => {
+  const { originalURL } = req.body;
+  const shortURL = shortid.generate();
+  const url = new URL({ originalURL, shortURL });
+  await url.save();
+  res.json({ shortURL });
+});
+
+router.get('/:shortURL', async (req, res) => {
+  const { shortURL } = req.params;
+  const url = await URL.findOne({ shortURL });
+  if (!url) {
+    return res.status(404).send('URL not found');
+  }
+  url.clickCount++;
+  await url.save();
+  res.redirect(url.originalURL);
+});
+
+router.get('/stats', async (req, res) => {
+  const urls = await URL.find();
+  res.json(urls);
+});
+
+module.exports = router;
+---->server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const authRoutes = require('./routes/auth');
+const urlRoutes = require('./routes/url');
+
+const app = express();
+app.use(bodyParser.json());
+
+mongoose.connect('mongodb://localhost:27017/urlshortener', { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.use('/api/auth', authRoutes);
+app.use('/api/url', urlRoutes);
+
+app.listen(5000, () => {
+  console.log('Server started on http://localhost:5000');
+});
+
+
