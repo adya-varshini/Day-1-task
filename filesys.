@@ -1,0 +1,51 @@
+------------------------------------------NODEJS FILE SYSTEM-------------------------------------------------------------
+---------->index.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+const folderPath = path.join(__dirname, 'my-directory', 'my-folder');
+
+if (!fs.existsSync(folderPath)) {
+  fs.mkdirSync(folderPath, { recursive: true });
+}
+
+// text file with the current timestamp
+app.post('/create-file', (req, res) => {
+  const timestamp = new Date().toISOString();
+  const filename = `${timestamp.replace(/[:.]/g, '-')}.txt`;
+  const filepath = path.join(folderPath, filename);
+
+  fs.writeFile(filepath, timestamp, (err) => {
+    if (err) {
+      return res.status(500).send('Error writing file');
+    }
+    res.send(`File created: ${filename}`);
+  });
+});
+
+
+app.get('/list-files', (req, res) => {
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      return res.status(500).send('Error reading directory');
+    }
+    const textFiles = files.filter(file => path.extname(file) === '.txt');
+    res.json(textFiles);
+  });
+});
+
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
+
+
+
+File created: 2024-06-30T14-33-10-123Z.txt
+["2024-06-30T14-33-10-123Z.txt"]
