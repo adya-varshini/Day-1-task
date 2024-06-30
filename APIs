@@ -1,0 +1,162 @@
+-----------------API TASKS----------------------------------------------------------------------
+---->CAT FACTS:
+----->index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Facts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Random Cat Facts</h1>
+        <button id="fetchCatFact" class="btn btn-primary mt-3">Get Cat Fact</button>
+        <p id="catFact" class="mt-3"></p>
+    </div>
+    <script src="catFacts.js"></script>
+</body>
+</html>
+
+--->styles.css
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+---->catFacts.js
+document.getElementById('fetchCatFact').addEventListener('click', fetchCatFact);
+
+function fetchCatFact() {
+    fetch('https://catfact.ninja/fact')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('catFact').innerText = data.fact;
+        })
+        .catch(error => {
+            console.error('Error fetching cat fact:', error);
+        });
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------
+----->JOKES API
+------>index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jokes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Random Jokes</h1>
+        <button id="fetchJoke" class="btn btn-primary mt-3">Get Joke</button>
+        <p id="joke" class="mt-3"></p>
+    </div>
+    <script src="jokes.js"></script>
+</body>
+</html>
+
+------>styles.css
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+---->jokes.js
+document.getElementById('fetchJoke').addEventListener('click', fetchJoke);
+
+function fetchJoke() {
+    fetch('https://v2.jokeapi.dev/joke/Any')
+        .then(response => response.json())
+        .then(data => {
+            let joke = '';
+            if (data.type === 'single') {
+                joke = data.joke;
+            } else {
+                joke = `${data.setup} - ${data.delivery}`;
+            }
+            document.getElementById('joke').innerText = joke;
+        })
+        .catch(error => {
+            console.error('Error fetching joke:', error);
+        });
+}
+----------------------------------------------------------------------------------------------------------------
+---->WEATHER API
+---->index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Current Weather</h1>
+        <input id="city" type="text" class="form-control mt-3" placeholder="Enter city name">
+        <button id="fetchWeather" class="btn btn-primary mt-3">Get Weather</button>
+        <p id="weather" class="mt-3"></p>
+    </div>
+    <script src="weather.js"></script>
+</body>
+</html>
+
+---->styles.css
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#city {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+---->weather.js
+document.getElementById('fetchWeather').addEventListener('click', fetchWeather);
+
+function fetchWeather() {
+    const city = document.getElementById('city').value;
+    const apiKey = 'your_api_key'; // Replace with your actual API key
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === 200) {
+                const weather = `Temperature: ${data.main.temp}°C, Weather: ${data.weather[0].description}`;
+                document.getElementById('weather').innerText = weather;
+            } else {
+                document.getElementById('weather').innerText = 'City not found';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching weather:', error);
+        });
+}
+----------------------------------------------------------------------------------------------------------------------------------------
