@@ -1,0 +1,68 @@
+---------------------------URL SHORTENER APPLICATION-----------------------------------
+-->FRONTEND
+--->URL.js
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const CreateURL = () => {
+  const [originalURL, setOriginalURL] = useState('');
+  const [shortURL, setShortURL] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await axios.post('/api/url/shorten', { originalURL });
+    setShortURL(response.data.shortURL);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={originalURL}
+          onChange={(e) => setOriginalURL(e.target.value)}
+          placeholder="Enter the original URL"
+          required
+        />
+        <button type="submit">Shorten URL</button>
+      </form>
+      {shortURL && <p>Short URL: {shortURL}</p>}
+    </div>
+  );
+};
+
+export default CreateURL;
+--->dashboard.js
+// Dashboard.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Line } from 'react-chartjs-2';
+
+const Dashboard = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get('/api/url/stats');
+      setData(response.data);
+    };
+    fetchData();
+  }, []);
+
+  const chartData = {
+    labels: data.map(url => url.createdAt),
+    datasets: [
+      {
+        label: 'URLs Created',
+        data: data.map(url => url.clickCount),
+        fill: false,
+        backgroundColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgba(75, 192, 192, 0.2)',
+      },
+    ],
+  };
+
+  return <Line data={chartData} />;
+};
+
+export default Dashboard;
